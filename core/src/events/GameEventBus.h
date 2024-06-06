@@ -1,0 +1,6 @@
+#ifndef GAMEEVENTBUS_H
+#define GAMEEVENTBUS_H
+
+
+
+#endif // GAMEEVENTBUS_H
