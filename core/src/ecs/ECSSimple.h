@@ -82,6 +82,11 @@ public:
         return nullptr;
     }
 
+    inline Component* GetComponentByEntityNoCheck(Entity entity)
+    {
+        return &components[lookup[entity]];
+    }
+
 
     inline void RemoveEntity(Entity entity) override
     {

@@ -3,6 +3,7 @@
 #include "system/PrimitiveRenderSystem.h"
 #include "system/LevelSystem.h"
 #include "system/MovementCollisionSystem.h"
+#include "system/PlayerMovementSystem.h"
 #include "ecs/ECSHelper.h"
 
 namespace elementled {
@@ -23,9 +24,13 @@ void GameScene::onCreate() {
     m_registry->RegisterComponent<KinematicBodyComponent>();
 
     // register system
+    this->RegisterSystem<LevelSystem>();
+    this->RegisterSystem<PlayerMovementSystem>();
+    this->RegisterSystem<MovementCollisionSystem>();
+
+    // register render system
     this->RegisterRenderSystem<PrimitiveRenderSystem>();
-    this->RegisterRenderSystem<LevelSystem>();
-    this->RegisterRenderSystem<MovementCollisionSystem>();
+
 };
 
 void GameScene::update(float dt)
@@ -65,31 +70,27 @@ void GameScene::render(float dt)
 
 void GameScene::onActivate()
 {
-    // unsigned int archerTextureId =  s_context.textureResource->Add("/Assets/mainchar.png","archer");
-    // unsigned int tilemapTextureId = s_context.textureResource->Add("/Assets/tilemap_packed_0.png","tilemap_01");
-    // unsigned int aimUi = s_context.textureResource->Add("/Assets/aim360.png","aim_ui");
-
-
     // //-------------------------------------------------------------------------------------------------------------------------------
     // // player
-    auto playerEntity = m_registry->CreateEntity();
-    auto &transform = m_registry->CreateComponent<TransformComponent>(playerEntity,400,400);
-    auto &primitiveShape = m_registry->CreateComponent<PrimitiveShapeComponent>(playerEntity,50,50,RED,RECTANGLE_LINE);
-    auto &kinematic = m_registry->CreateComponent<KinematicBodyComponent>(playerEntity,200);
-    kinematic.direction = {1,1};
+    auto player = CreateGameObject(m_registry,450,450);
+    player.infoComponent->tag = "player";
+    m_registry->CreateComponent<PrimitiveShapeComponent>(player.entity,50,50,RED,RECTANGLE_LINE);
+    auto &kinematic = m_registry->CreateComponent<KinematicBodyComponent>(player.entity,1000);
+    // kinematic.direction = {1,1};
+
     // level
-    auto levelGameObject = CreateGameObject(m_registry,200,200);
+    auto levelGameObject = CreateGameObject(m_registry);
     auto &level = m_registry->CreateComponent<LevelComponent>(levelGameObject.entity,10,10);
     level.tileWidth     = 60;
     level.tileHeight    = 60;
     level.matrix.mat = {
         1,1,1,1,1,1,1,1,1,1,
-        1,1,0,0,0,0,0,0,0,1,
-        1,0,1,0,0,0,0,0,0,1,
+        1,1,1,0,0,0,0,0,0,1,
         1,0,0,0,0,0,0,0,0,1,
         1,0,0,0,0,0,0,0,0,1,
         1,0,0,0,0,0,0,0,0,1,
         1,0,0,0,0,0,0,0,0,1,
+        1,0,0,0,0,1,1,0,0,1,
         1,0,0,0,0,0,0,0,0,1,
         1,0,0,0,0,0,0,0,0,1,
         1,1,1,1,1,1,1,1,1,1

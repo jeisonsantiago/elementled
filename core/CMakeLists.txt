@@ -29,6 +29,8 @@ set(SRC_FILES
     src/system/LevelSystem.cpp
     src/system/MovementCollisionSystem.h
     src/system/MovementCollisionSystem.cpp
+    src/system/PlayerMovementSystem.h
+    src/system/PlayerMovementSystem.cpp
 
     src/events/Event.h
     src/events/Events.h
@@ -43,6 +45,7 @@ set(SRC_FILES
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES}
+
 
 
     )

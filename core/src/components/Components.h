@@ -91,6 +91,39 @@ struct LevelComponent{
     uint &operator()(size_t row, size_t col) {
         return matrix(row,col);
     };
+
+    // tiles colliding
+    bool rect_colliding_tiles(float x, float y, float w, float h){
+
+        float left = x;
+        float right = x+w;
+        float top = y;
+        float bottom = y+h;
+
+        int left_tile = (left / tileWidth);
+        int right_tile = (right / tileWidth);
+        int top_tile = (top / tileHeight);
+        int bottom_tile = (bottom / tileHeight);
+
+        // check boundaries
+        // if(left_tile < 0) left_tile = 0;
+        // if(top_tile < 0) top_tile = 0;
+        // if(right_tile > tileSizeWidth) right_tile = tileSizeWidth;
+        // if(bottom_tile > tileSizeHeight) bottom_tile = tileSizeHeight;
+
+        // TODO: cap values
+        bool any_collision = false;
+        for(size_t i = left_tile; i <= right_tile;i++){
+            for(size_t j = top_tile; j <= bottom_tile;j++){
+                int tile_value = this->operator()(j,i);
+                if(tile_value == 1){
+                    any_collision = true;
+                }
+            }
+        }
+
+        return any_collision;
+    }
 };
 
 // -------------------------------------------------------------------------

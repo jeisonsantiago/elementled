@@ -24,10 +24,72 @@ void MovementCollisionSystem::Prepare(ecs_simple::Registry *registry)
 
 void MovementCollisionSystem::Update(float dt)
 {
-    // auto tile_component = m_tilemapManager->GetComponentByIndex(0);
-    for(auto &kinematic:m_kinematicBodyManager->GetComponentVector()){
-        if(kinematic.direction.x != 0 || kinematic.direction.y != 0){
 
+    auto levelEntity = m_levelManager->GetEntity(0);
+    auto *level = m_levelManager->GetComponentByEntity(levelEntity);
+    // get level offset
+    auto* levelTransform = m_transformManager->GetComponentByEntity(levelEntity);
+    math::Vec2<float> offset = {0.0f,0.0f};
+    if(levelTransform){
+        offset = levelTransform->position;
+    }
+
+    if(!level) return;
+
+    // auto tile_component = m_tilemapManager->GetComponentByIndex(0);
+    for(auto e:m_kinematicBodyManager->GetEntities()){
+        // get component
+        auto *kinematic = m_kinematicBodyManager->GetComponentByEntityNoCheck(e);
+
+        float stepCount = 4.0f;
+        float delta = dt/(float)stepCount;
+        // TraceLog(LOG_INFO,"%f %f",dt,delta);
+        for (int i = 0; i < stepCount; ++i) {
+            if(kinematic->direction.x != 0 || kinematic->direction.y != 0){
+                // get position
+                auto *transform = m_transformManager->GetComponentByEntity(e);
+
+                if(transform){
+
+                    // X checking --------------------------------------------------
+                    // first keep old position
+                    math::Vec2<float> oldPosition = transform->position;
+
+                    // second move x direction
+                    transform->position.x += kinematic->direction.x * (kinematic->speed/(float)stepCount) * dt/(float)stepCount;
+
+                    // check collision with tilemap
+                    bool isCollidingX = level->rect_colliding_tiles(
+                        transform->position.x,
+                        transform->position.y,
+                        50,
+                        50
+                        );
+
+                    if(isCollidingX){
+                        transform->position = oldPosition;
+                    }
+
+                    // Y checking --------------------------------------------------
+                    // first keep old position
+                    oldPosition = transform->position;
+
+                    // second move x direction
+                    transform->position.y += kinematic->direction.y * (kinematic->speed/(float)stepCount) * dt/(float)stepCount;
+
+                    // check collision with tilemap
+                    bool isCollidingY = level->rect_colliding_tiles(
+                        transform->position.x,
+                        transform->position.y,
+                        50,
+                        50
+                        );
+
+                    if(isCollidingY){
+                        transform->position = oldPosition;
+                    }
+                }
+            }
         }
     }
     // if(!tile_component) return;

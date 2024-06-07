@@ -15,7 +15,7 @@ struct GameObject{
 
 static GameObject CreateGameObject(
     std::shared_ptr<ecs_simple::Registry> registry,
-    float x, float y
+    float x = 0, float y = 0
     )
     {
 
