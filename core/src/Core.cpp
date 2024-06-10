@@ -52,7 +52,7 @@ void RunApplication(const appConfig &config)
     // set up window
     InitWindow(config.width, config.height,config.title.c_str());
 
-    SetTargetFPS(60);
+    SetTargetFPS(120);
 
     // main scene manager
     // std::unique_ptr<SceneManager> sceneManager= std::make_unique<SceneManager>();

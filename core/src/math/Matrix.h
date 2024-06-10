@@ -5,6 +5,33 @@
 
 namespace math {
 
+// get all neigbours
+// 0 1 0
+// 8 x 2
+// 0 4 0
+static std::vector<math::Vec2i> walk4 = {
+    math::Vec2i(-1,0),    // 1
+    math::Vec2i(0,+1),    // 2
+    math::Vec2i(+1,0),    // 4
+    math::Vec2i(0,-1),    // 8
+};
+
+// get all neigbours
+// 0 1 2
+// 7 x 3
+// 6 5 4
+static std::vector<math::Vec2i> walk8 = {
+    math::Vec2i(-1,-1),     // 0
+    math::Vec2i(0,-1),      // 1
+    math::Vec2i(1,-1),      // 2
+    math::Vec2i(1,0),       // 3
+    math::Vec2i(1,1),       // 4
+    math::Vec2i(0,1),       // 5
+    math::Vec2i(-1,1),      // 6
+    math::Vec2i(-1,0),      // 7
+};
+
+
 
 template<typename T>
 struct Matrix{
@@ -102,12 +129,14 @@ static math::matrix_i32 segregate(const math::matrix_i32&mat){
     // 0 1 0
     // 8 x 2
     // 0 4 0
-    std::vector<math::Vec2i> walk4 = {
-        math::Vec2i(-1,0),    // 1
-        math::Vec2i(0,+1),    // 2
-        math::Vec2i(+1,0),    // 4
-        math::Vec2i(0,-1),    // 8
-    };
+    // std::vector<math::Vec2i> walk4 = {
+    //     math::Vec2i(-1,0),    // 1
+    //     math::Vec2i(0,+1),    // 2
+    //     math::Vec2i(+1,0),    // 4
+    //     math::Vec2i(0,-1),    // 8
+    // };
+
+
 
     math::matrix_i32 resultMat(mat.rows,mat.cols,0);
     math::matrix_i32 visitedMat(mat.rows,mat.cols,0);

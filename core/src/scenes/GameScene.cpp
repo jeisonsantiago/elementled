@@ -1,6 +1,7 @@
 #include "GameScene.h"
 
 #include "system/PrimitiveRenderSystem.h"
+#include "system/LevelRenderSystem.h"
 #include "system/LevelSystem.h"
 #include "system/MovementCollisionSystem.h"
 #include "system/PlayerMovementSystem.h"
@@ -29,8 +30,9 @@ void GameScene::onCreate() {
     this->RegisterSystem<MovementCollisionSystem>();
 
     // register render system
-    this->RegisterRenderSystem<PrimitiveRenderSystem>();
 
+    this->RegisterRenderSystem<LevelRenderSystem>();
+    this->RegisterRenderSystem<PrimitiveRenderSystem>();
 };
 
 void GameScene::update(float dt)
@@ -42,58 +44,45 @@ void GameScene::update(float dt)
 void GameScene::render(float dt)
 {
     Scene::render(dt);
-    // //DrawText("GAME SCENE",50,50,30,BLACK);
-    // // Scene::render(dt);
-    // bool debug = false;
-
-    // if(p_cameraComponent){
-    //     BeginMode2D(p_cameraComponent->camera);
-    //     // getRenderSystem<PrimitiveRenderSystem>()->update(dt);
-    //     getRenderSystem<LevelSystem>()->update(dt);
-    //     getRenderSystem<SpriteSystem>()->update(dt);
-    //     if(debug){
-    //         getRenderSystem<DebugRender>()->update(dt);
-    //     }
-
-    //     EndMode2D();
-    // }else{
-    //     // getRenderSystem<PrimitiveRenderSystem>()->update(dt);
-    //     getRenderSystem<LevelSystem>()->update(dt);
-    //     getRenderSystem<SpriteSystem>()->update(dt);
-    //     if(debug){
-    //         getRenderSystem<DebugRender>()->update(dt);
-    //     }
-    // }
-    // getDrawSystem<ecs_simple::UiRenderSystem>()->update(dt);
-    // getDrawSystem<ecs_simple::ImGuiRenderSystem>()->update(dt);
 }
 
 void GameScene::onActivate()
 {
     // //-------------------------------------------------------------------------------------------------------------------------------
     // // player
-    auto player = CreateGameObject(m_registry,450,450);
+    auto player = CreateGameObject(m_registry,200,200);
     player.infoComponent->tag = "player";
-    m_registry->CreateComponent<PrimitiveShapeComponent>(player.entity,50,50,RED,RECTANGLE_LINE);
+    auto &primitiveShape = m_registry->CreateComponent<PrimitiveShapeComponent>(player.entity,50,50,RED,RECTANGLE);
+    primitiveShape.layer = PLAYER;
     auto &kinematic = m_registry->CreateComponent<KinematicBodyComponent>(player.entity,1000);
-    // kinematic.direction = {1,1};
+
 
     // level
     auto levelGameObject = CreateGameObject(m_registry);
-    auto &level = m_registry->CreateComponent<LevelComponent>(levelGameObject.entity,10,10);
-    level.tileWidth     = 60;
-    level.tileHeight    = 60;
+    auto &level = m_registry->CreateComponent<LevelComponent>(levelGameObject.entity,20,20);
+    level.tileWidth     = TILE_WIDTH;
+    level.tileHeight    = TILE_HEIGHT;
     level.matrix.mat = {
-        1,1,1,1,1,1,1,1,1,1,
-        1,1,1,0,0,0,0,0,0,1,
-        1,0,0,0,0,0,0,0,0,1,
-        1,0,0,0,0,0,0,0,0,1,
-        1,0,0,0,0,0,0,0,0,1,
-        1,0,0,0,0,0,0,0,0,1,
-        1,0,0,0,0,1,1,0,0,1,
-        1,0,0,0,0,0,0,0,0,1,
-        1,0,0,0,0,0,0,0,0,1,
-        1,1,1,1,1,1,1,1,1,1
+        1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+        1,1,1,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,1,1,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+        1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
     };
 
     level.isCurrent = true;

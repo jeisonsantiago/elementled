@@ -5,6 +5,7 @@
 #include "math/Matrix.h"
 #include "math/Vec2.h"
 #include "ecs/ECSSimple.h"
+#include "Tile.h"
 
 namespace elementled{
 // -------------------------------------------------------------------------
@@ -79,9 +80,11 @@ struct LevelComponent{
     size_t tileWidth = 0;
     size_t tileHeight = 0;
     math::Matrix<uint> matrix;
+    math::Matrix<Tile> matrixTileMap;
 
     LevelComponent(size_t r, size_t c):rowsCount(r),colsCount(c){
         matrix = math::Matrix<uint>(r,c,0);
+        matrixTileMap = math::Matrix<Tile>(r,c);
     }
 
     uint operator()(size_t row, size_t col) const{

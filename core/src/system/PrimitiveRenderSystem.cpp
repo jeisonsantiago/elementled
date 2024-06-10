@@ -27,7 +27,7 @@ void PrimitiveRenderSystem::Update(float dt)
     std::map<RenderLayer, std::vector<ShapeAndTransform>> layerVector;
 
     for(ecs_simple::Entity e:m_shapesManager->GetEntities()){
-        auto *shape = m_shapesManager->GetComponentByEntity(e);
+        auto *shape = m_shapesManager->GetComponentByEntityNoCheck(e);
         auto *transform = m_transformsManager->GetComponentByEntity(e);
 
         // we need both to be valid so we can render
@@ -39,49 +39,52 @@ void PrimitiveRenderSystem::Update(float dt)
 
     for(auto& item:layerVector){
         for(auto& st:item.second){
-            Color collidingColor = st.shape->color;
 
-            //TODO: draw collider
-            switch (st.shape->type) {
-            case Shape::CIRCLE:{
-                DrawCircle(
-                    st.transform->position.x,
-                    st.transform->position.y,
-                    st.shape->radius,
-                    collidingColor);
-                break;
-            }
-            case Shape::CIRCLE_LINE:{
-                DrawCircleLines(
-                    st.transform->position.x,
-                    st.transform->position.y,
-                    st.shape->radius,
-                    collidingColor);
-                break;
-            }
-            case Shape::RECTANGLE:{
-                DrawRectangle(
-                    st.transform->position.x,
-                    st.transform->position.y,
-                    st.shape->width,
-                    st.shape->height,
-                    collidingColor);
-                break;
-            }
-            case Shape::RECTANGLE_LINE:{
-                DrawRectangleLines(
-                    st.transform->position.x,
-                    st.transform->position.y,
-                    st.shape->width,
-                    st.shape->height,
-                    collidingColor);
-                break;
-            }
-            default:
-                break;
-            }
+            if (st.shape->layer == TILE){
+                // DrawTile()
+            }else{
+                Color collidingColor = st.shape->color;
 
-
+                //TODO: draw collider
+                switch (st.shape->type) {
+                case Shape::CIRCLE:{
+                    DrawCircle(
+                        st.transform->position.x,
+                        st.transform->position.y,
+                        st.shape->radius,
+                        collidingColor);
+                    break;
+                }
+                case Shape::CIRCLE_LINE:{
+                    DrawCircleLines(
+                        st.transform->position.x,
+                        st.transform->position.y,
+                        st.shape->radius,
+                        collidingColor);
+                    break;
+                }
+                case Shape::RECTANGLE:{
+                    DrawRectangle(
+                        st.transform->position.x,
+                        st.transform->position.y,
+                        st.shape->width,
+                        st.shape->height,
+                        collidingColor);
+                    break;
+                }
+                case Shape::RECTANGLE_LINE:{
+                    DrawRectangleLines(
+                        st.transform->position.x,
+                        st.transform->position.y,
+                        st.shape->width,
+                        st.shape->height,
+                        collidingColor);
+                    break;
+                }
+                default:
+                    break;
+                }
+            }
         }
     }
 

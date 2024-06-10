@@ -44,7 +44,9 @@ void LevelSystem::LoadLevel()
             for (int r = 0; r < level->matrix.rows; ++r) {
                 for (int c = 0; c < level->matrix.cols; ++c) {
 
-                    if(level->matrix(r,c) == 0) continue;
+                    // if(level->matrix(r,c) == 0) continue;
+                    // map tilematrix
+                    level->matrixTileMap(r,c) = Tile{tileTypeMap[level->matrix(r,c)]};
 
                     // create entity
                     ecs_simple::Entity tileEntity = p_registry->CreateEntity();
@@ -58,9 +60,29 @@ void LevelSystem::LoadLevel()
                         );
 
                     // TraceLog(LOG_INFO,"%d %d",newPosX,newPosY);
+                    auto &shape = m_shapesManager->Create(tileEntity,level->tileWidth,level->tileHeight,BLACK,RECTANGLE_LINE);
+                    shape.layer = TILE;
+                }
+            }
+        }
+    }
+}
 
+void LevelSystem::CheckCurrentLevel()
+{
+    for(ecs_simple::Entity e:m_levelManager->GetEntities()){
+        auto *level = m_levelManager->GetComponentByEntity(e);
+        if(level->isCurrent){
+            // get transform
+            const auto *transform = m_transformsManager->GetComponentByEntity(e);
 
-                    m_shapesManager->Create(tileEntity,level->tileWidth,level->tileHeight,BROWN,RECTANGLE_LINE);
+            // TraceLog(LOG_INFO,"%d %d",(int)transform->position.x,(int)transform->position.y);
+            int parentTransformX = (int)transform->position.x;
+            int parentTransformY = (int)transform->position.y;
+
+            for (int r = 0; r < level->matrix.rows; ++r) {
+                for (int c = 0; c < level->matrix.cols; ++c) {
+
                 }
             }
         }
